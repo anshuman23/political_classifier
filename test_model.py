@@ -9,6 +9,9 @@ from dataset import Dataset
 from torch.utils.data import DataLoader
 from utils.normalizer import normalize
 
+import warnings #Remove in future, bad practice
+warnings.filterwarnings("ignore")
+
 if __name__ == '__main__':
 
   device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -20,14 +23,7 @@ if __name__ == '__main__':
   args = parser.parse_args()
   model = Model(path = args.modelpath).to(device)
   tokenizer = Tokenizer(path = args.modelpath)
-  #df = pd.read_csv(args.datapath).dropna()
-  #df = pd.read_csv(args.datapath, lineterminator='\n').dropna()
   df = pd.read_csv(open(args.datapath, 'rU'), encoding='utf-8', engine='c').dropna()
-
-  #df.dropna(subset=['text'], inplace=True) ##
-  #if df.empty:
-      
-  
 
   df['text'] = df['text'].apply(normalize)
   x = df['text'].tolist()
@@ -38,10 +34,6 @@ if __name__ == '__main__':
                                 max_length=128,  return_tensors='pt')
   ds = Dataset(encodings, y)
   dl = DataLoader(ds, batch_size=32, shuffle=False)
-
-
-  
-
 
   model.eval()
   text = []
@@ -54,11 +46,7 @@ if __name__ == '__main__':
           predictions = predictions + torch.argmax(outputs, axis=1).cpu().numpy().tolist()
           confidence = confidence + torch.nn.functional.softmax(outputs,dim=1).cpu().numpy().tolist()
 
-
-  
-
   confidence = [ ["{:0.2%}".format(x) for x in v] for v in confidence]
-  
 
   data={"text": x, "prediction" : predictions,"confidence":confidence}
 
@@ -67,9 +55,3 @@ if __name__ == '__main__':
 
   predictions_df = pd.DataFrame(data=data)
   predictions_df.to_csv('predictions.csv')
-
-  
-
-
-  
-

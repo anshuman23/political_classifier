@@ -24,4 +24,4 @@ If you use our model/data, please cite the following papers:
   title={Incentivizing News Consumption on Social Media Platforms Using Large Language Models and Realistic Bot Accounts},
   author={Askari, Hadi and Chhabra, Anshuman and von Hohenberg, Bernhard Clemm and Heseltine, Michael and Wojcieszak, Magdalena},
   journal={arXiv preprint arXiv:2403.13362},
-  year={2024}}```
+  year={2024}}
